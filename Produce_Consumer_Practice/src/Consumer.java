@@ -23,7 +23,7 @@ public class Consumer implements Runnable{
 			
 			if(!str.equals("")){
 				int index = discriminateStrFirstIndex(str);
-				SaveStr(index, str);
+				saveStr(index, str);
 			}
 			
 		}while(validateCheckQueue());	
@@ -62,7 +62,7 @@ public class Consumer implements Runnable{
     	return find - 97;
     }
     
-    private void SaveStr(int index, String str){
+    private void saveStr(int index, String str){
     	save[index].append(str + "\n");
     }
     

@@ -8,31 +8,30 @@ import java.util.concurrent.BlockingQueue;
 
 public class Consumer implements Runnable{
 	private BlockingQueue<String>[] queue;
-	private StringBuffer[] save;
-	private int cnt;
+	private StringBuffer[] saveStr;
+	private int count;
 	
 	Consumer(BlockingQueue<String>[] queue){
 		this.queue = queue;
-		this.save = new StringBuffer[26];
+		this.saveStr = new StringBuffer[26];
 	}
 	
 	@Override
 	public void run() {
-		do{			
+		while(validateCheckQueue()){			
 			String str = getStr(getNextPartNum());
 			
 			if(!str.equals("")){
 				int index = discriminateStrFirstIndex(str);
-				saveStr(index, str);
+				SaveStr(index, str);
 			}
 			
-		}while(validateCheckQueue());	
-		
+		}		
 	}
 	
 	private int getNextPartNum(){
 		synchronized (this){
-			return cnt++ % 4;
+			return count++ % 4;
 		}
 	}
 	
@@ -62,8 +61,8 @@ public class Consumer implements Runnable{
     	return find - 97;
     }
     
-    private void saveStr(int index, String str){
-    	save[index].append(str + "\n");
+    private void SaveStr(int index, String str){
+    	saveStr[index].append(str + "\n");
     }
     
     private boolean validateCheckQueue(){
@@ -73,7 +72,6 @@ public class Consumer implements Runnable{
     			return true;
     		}
     	}
-    	return false;
+		return false;
     }
-
 }

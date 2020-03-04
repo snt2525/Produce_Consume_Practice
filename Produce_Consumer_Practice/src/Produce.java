@@ -13,12 +13,14 @@ import java.util.concurrent.BlockingQueue;
 public class Produce implements Runnable {
 	private BlockingQueue<String>[] queue;
 	private Hashtable<String, Integer> hash;
+	private FileIO fileIo;
 	private Object lock;
-	private Scanner sc;
 	private int cnt;
 	
 	Produce(BlockingQueue<String>[] queue){
-		this.sc = new Scanner(System.in);
+		fileIo = new FileIO();
+		fileIo.readFile();
+		
 		this.lock = new Object();
 		this.hash = new Hashtable<>();
 		this.queue = queue;
@@ -26,16 +28,20 @@ public class Produce implements Runnable {
 
 	@Override
 	public void run() {
-		String str = sc.next();
+		String str = fileIo.getStr();
 		do {
 			
 			if(validCheckStr(str) && !disposeSameStr(str)) {
 				putStrToQuque(str);		
 			}
 			
-			str = sc.next();
+			str = fileIo.getStr();
 			
 		}while(str.equals(""));
+	}
+	
+	public void setFileIO(FileIO fileIo){
+		fileIo = this.fileIo;
 	}
 	
 	//정규식

@@ -13,7 +13,6 @@ public class Solution {
 		
 		int partNum = sc.nextInt();		
 		initQueue(partNum);
-		
 		produce = new Thread(new Produce(queue));
 		consumer = new Thread(new Consumer(queue));
 		
@@ -36,6 +35,8 @@ public class Solution {
 	
 	public static void main(String[] args) {
 		init();	
+		
+		fileIo.readFile();
 		
 		produce.start();
 		produce.run();

@@ -7,15 +7,14 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class FileIO {
-	BlockingQueue<String> str;
-	File file;
+	private BlockingQueue<String> str;
+	private File file;
 	
 	public FileIO(){
 		str = new LinkedBlockingQueue<>();
-		readFile();
 	}
 	
-	private void readFile(){
+	public void readFile(){
 		File file = new File("word.txt");
 		
 		try(BufferedReader bufReader = new BufferedReader(new FileReader(file));){
@@ -26,9 +25,13 @@ public class FileIO {
             }
         
         }catch (FileNotFoundException e) {
-            // TODO: handle exception
+        	 System.out.println(e);
         }catch(IOException e){
             System.out.println(e);
         }
+	}
+	
+	public String getStr(){
+		return str.poll();
 	}
 }

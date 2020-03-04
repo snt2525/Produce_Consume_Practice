@@ -2,15 +2,13 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Solution {
+public class Main {
 	static BlockingQueue<String>[] queue;
 	static Thread produce;
 	static Thread consumer;
 	static Scanner sc;
 	
-	static void init() {
-		sc = new Scanner(System.in);
-		
+	static void init() {	
 		int partNum = sc.nextInt();		
 		initQueue(partNum);
 		produce = new Thread(new Produce(queue));
@@ -29,8 +27,6 @@ public class Solution {
 	static void closeResource(){
 		produce.destroy();
 		consumer.destroy();
-		
-		sc.close();
 	}
 	
 	public static void main(String[] args) {

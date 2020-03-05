@@ -31,7 +31,7 @@ public class FileIO {
         }
 	}
 	
-	public String getStr(){
+	public String getStr() {
 		return str.poll();
 	}
 }

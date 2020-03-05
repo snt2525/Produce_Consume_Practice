@@ -1,5 +1,6 @@
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
+import java.util.regex.Pattern;
 
 /*
  *  a. 파일에서 각 라인을 읽어온다.
@@ -29,8 +30,7 @@ public class Produce implements Runnable {
 	@Override
 	public void run() {
 		String str = fileIo.getStr();
-		do {
-			
+		do {			
 			if(validCheckStr(str) && !disposeSameStr(str)) {
 				putStrToQuque(str);		
 			}
@@ -44,10 +44,16 @@ public class Produce implements Runnable {
 		fileIo = this.fileIo;
 	}
 	
-	//정규식
-	private boolean validCheckStr(String str) {
-		
-		return false;
+	private boolean validCheckStr(String word) {
+		String pattern = "^[a-zA-Z0-9]*$";
+		String firstIndexStr = word.substring(0, 1);
+        boolean vaildPattern = Pattern.matches(pattern, firstIndexStr);
+        
+        if (vaildPattern) {
+            return true;
+        }
+        
+	    return false;
 	}
 	
 	//HashTable에서 검사

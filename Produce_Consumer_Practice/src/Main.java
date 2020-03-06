@@ -3,20 +3,20 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Main {
+	static FileIO fileIo;
 	static BlockingQueue<String>[] queue;
-	static Thread produce;
-	static Thread consumer;
-	static Scanner sc;
+	private Thread produce;
+	private Thread consumer;
 	
-	static void init() {	
-		int partNum = sc.nextInt();		
-		initQueue(partNum);
+	private void init() {	
+		this.fileIo = new FileIO();
+		initQueue(fileIo.getWordSize());
 		produce = new Thread(new Produce(queue));
 		consumer = new Thread(new Consumer(queue));
 		
 	}
 	
-	static void initQueue(int partNum) {
+	private void initQueue(int partNum) {
 		queue = new LinkedBlockingQueue[partNum];
 		
 		for(int i = 0;i < partNum;i++) {
@@ -24,20 +24,21 @@ public class Main {
 		}
 	}
 	
-	static void closeResource(){
+	private void closeResource(){
 		produce.destroy();
 		consumer.destroy();
 	}
 	
 	public static void main(String[] args) {
-		init();	
-	
-		produce.start();
-		produce.run();
+		Main m = new Main();
+		m.init();	
 		
-		consumer.start();
-		consumer.run();
+		m.produce.start();
+		m.produce.run();
+
+		m.consumer.start();
+		m.consumer.run();
 			
-		closeResource();	
+		m.closeResource();	
 	}
 }

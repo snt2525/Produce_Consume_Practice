@@ -31,7 +31,7 @@ public class Produce implements Runnable {
 	public void run() {
 		String str = fileIo.getStr();
 		do {			
-			if(validCheckStr(str) && !disposeSameStr(str)) {
+			if(!disposeSameStr(str)) {
 				putStrToQuque(str);		
 			}
 			
@@ -42,18 +42,6 @@ public class Produce implements Runnable {
 	
 	public void setFileIO(FileIO fileIo){
 		fileIo = this.fileIo;
-	}
-	
-	private boolean validCheckStr(String word) {
-		String pattern = "^[a-zA-Z0-9]*$";
-		String firstIndexStr = word.substring(0, 1);
-        boolean vaildPattern = Pattern.matches(pattern, firstIndexStr);
-        
-        if (vaildPattern) {
-            return true;
-        }
-        
-	    return false;
 	}
 	
 	//HashTable에서 검사

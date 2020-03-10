@@ -2,17 +2,27 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Main {
+import CommonModule.FileIO;
+import Consumer.Consumer;
+import Producer.Producer;
+
+public class KafkaApplication {
 	static FileIO fileIo;
 	static BlockingQueue<String>[] queue;
 	private Thread produce;
 	private Thread consumer;
 	
 	private void init() {	
+		initFileIo();
+		
+		produce = new Thread(new Producer(queue));
+		consumer = new Thread(new Consumer(queue));
+		
+	}
+	
+	private void initFileIo(){
 		this.fileIo = new FileIO();
 		initQueue(fileIo.getWordSize());
-		produce = new Thread(new Produce(queue));
-		consumer = new Thread(new Consumer(queue));
 		
 	}
 	
@@ -30,7 +40,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		Main m = new Main();
+		KafkaApplication m = new KafkaApplication();
 		m.init();	
 		
 		m.produce.start();

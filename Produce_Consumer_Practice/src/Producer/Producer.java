@@ -1,6 +1,9 @@
+package Producer;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Pattern;
+
+import CommonModule.FileIO;
 
 /*
  *  a. 파일에서 각 라인을 읽어온다.
@@ -11,14 +14,14 @@ import java.util.regex.Pattern;
 	· 파티션 수는 프로그램의 실행 argument로 입력 받는다.
 	· 동일한 단어는 항상 동일한 파티션에 포함되야 한다.
  */
-public class Produce implements Runnable {
+public class Producer implements Runnable {
 	private BlockingQueue<String>[] queue;
 	private Hashtable<String, Integer> hash;
 	private FileIO fileIo;
 	private Object lock;
 	private int cnt;
 	
-	Produce(BlockingQueue<String>[] queue){
+	public Producer(BlockingQueue<String>[] queue){
 		fileIo = new FileIO();
 		fileIo.readFile();
 		
@@ -30,7 +33,7 @@ public class Produce implements Runnable {
 	@Override
 	public void run() {
 		String str = fileIo.getStr();
-		do {			
+		do{			
 			if(!disposeSameStr(str)) {
 				putStrToQuque(str);		
 			}
@@ -41,7 +44,7 @@ public class Produce implements Runnable {
 	}
 	
 	public void setFileIO(FileIO fileIo){
-		fileIo = this.fileIo;
+		this.fileIo = fileIo;
 	}
 	
 	//HashTable에서 검사

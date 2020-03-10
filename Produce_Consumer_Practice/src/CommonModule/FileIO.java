@@ -1,3 +1,4 @@
+package CommonModule;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Pattern;
 
 public class FileIO {
+	private final static String INVAILD_PATTERN ="^[a-zA-Z0-9]*$";
 	private BlockingQueue<String> str;
 	private File file;
 	
@@ -22,7 +24,7 @@ public class FileIO {
             //입력 스트림 생성
             String line = "";
             while((line = bufReader.readLine()) != null){
-            	if(validCheckStr(line)){
+            	if(Pattern.matches(INVAILD_PATTERN, line)){
         			str.add(line);
             	}
             }
@@ -41,16 +43,5 @@ public class FileIO {
 	public int getWordSize(){
 		return str.size();
 	}
-	
-	private boolean validCheckStr(String word) {
-		String pattern = "^[a-zA-Z0-9]*$";
-		String firstIndexStr = word.substring(0, 1);
-        boolean vaildPattern = Pattern.matches(pattern, firstIndexStr);
-        
-        if (vaildPattern) {
-            return true;
-        }
-        
-	    return false;
-	}
+
 }

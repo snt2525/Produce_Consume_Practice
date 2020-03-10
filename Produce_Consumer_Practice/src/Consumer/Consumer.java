@@ -1,3 +1,4 @@
+package Consumer;
 import java.util.concurrent.BlockingQueue;
 
 /*
@@ -11,7 +12,7 @@ public class Consumer implements Runnable{
 	private StringBuffer[] saveStr;
 	private int count;
 	
-	Consumer(BlockingQueue<String>[] queue){
+	public Consumer(BlockingQueue<String>[] queue){
 		this.queue = queue;
 		this.saveStr = new StringBuffer[26];
 	}

@@ -1,4 +1,4 @@
-package CommonModule;
+package CommonUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,14 +6,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-public class FileIO {
+public class FileRead {
+	private final static Logger LOG = Logger.getLogger("FileRead");	
+	
 	private final static String INVAILD_PATTERN ="^[a-zA-Z0-9]*$";
 	private BlockingQueue<String> str;
-	private File file;
 	
-	public FileIO(){
+	public FileRead(){
 		str = new LinkedBlockingQueue<>();
 	}
 	
@@ -30,15 +32,16 @@ public class FileIO {
             }
         
         }catch (FileNotFoundException e) {
-        	 System.out.println(e);
+        	LOG.severe(e.getMessage());
         }catch(IOException e){
-            System.out.println(e);
+        	LOG.severe(e.getMessage());
         }
 	}
 	
 	public String getStr() {
 		return str.poll();
 	}
+
 	
 	public int getWordSize(){
 		return str.size();

@@ -19,14 +19,14 @@ public class Consumer implements Runnable{
 	
 	@Override
 	public void run() {
+		String str = getStr(getNextPartNum());
 		while(validateCheckQueue()){			
-			String str = getStr(getNextPartNum());
 			
 			if(!str.equals("")){
 				int index = discriminateStrFirstIndex(str);
 				SaveStr(index, str);
 			}
-			
+			str = getStr(getNextPartNum());
 		}		
 	}
 	

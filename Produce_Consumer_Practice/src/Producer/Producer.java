@@ -3,7 +3,8 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Pattern;
 
-import CommonModule.FileIO;
+import Brocker.Brocker;
+import CommonUtil.FileRead;
 
 /*
  *  a. 파일에서 각 라인을 읽어온다.
@@ -15,52 +16,41 @@ import CommonModule.FileIO;
 	· 동일한 단어는 항상 동일한 파티션에 포함되야 한다.
  */
 public class Producer implements Runnable {
-	private BlockingQueue<String>[] queue;
+	private Brocker brocker;
+	private FileRead fileRead;
 	private Hashtable<String, Integer> hash;
-	private FileIO fileIo;
-	private Object lock;
-	private int cnt;
+	private int brockerIndex;
+	private int brockerSize;
 	
-	public Producer(BlockingQueue<String>[] queue){
-		fileIo = new FileIO();
-		fileIo.readFile();
+	public Producer(Brocker brocker){
+		this.brocker = brocker;
 		
-		this.lock = new Object();
 		this.hash = new Hashtable<>();
-		this.queue = queue;
 	}
 
 	@Override
 	public void run() {
-		String str = fileIo.getStr();
-		do{			
-			if(!disposeSameStr(str)) {
-				putStrToQuque(str);		
-			}
-			
-			str = fileIo.getStr();
-			
-		}while(str.equals(""));
+		String word = fileRead.getStr();
+		
+		while(!word.isEmpty() || word.equals(""));{			
+			putStrToQuque(word);
+			word = fileRead.getStr();		
+		}
 	}
 	
-	public void setFileIO(FileIO fileIo){
-		this.fileIo = fileIo;
-	}
-	
-	//HashTable에서 검사
 	private boolean disposeSameStr(String key) {
 		if(hash.containsKey(key)) {
-			int value = hash.get(key);
-			queue[value].add(key);			
+			int index = hash.get(key);
+			brocker.putStr(key, index);			
 			return true;
 		}		
 		
 		return false;
 	}
 	
-	private void putStrToQuque(String key) {
-		hash.put(key, cnt++ % 4);
-		int value = hash.get(key);
-		queue[value].add(key);
+	private void putStrToQuque(String word) {
+		hash.put(word, brockerIndex++ % brockerSize);
+		int index = hash.get(word);
+		brocker.putStr(word, index);
 	}
 }

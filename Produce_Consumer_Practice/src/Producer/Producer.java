@@ -4,7 +4,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.regex.Pattern;
 
 import Brocker.Brocker;
-import CommonUtil.FileRead;
+import FileUtil.FileRead;
 
 /*
  *  a. 파일에서 각 라인을 읽어온다.
@@ -15,33 +15,35 @@ import CommonUtil.FileRead;
 	· 파티션 수는 프로그램의 실행 argument로 입력 받는다.
 	· 동일한 단어는 항상 동일한 파티션에 포함되야 한다.
  */
-public class Producer implements Runnable {
+
+public abstract class Producer implements Runnable {
 	private Brocker brocker;
-	private FileRead fileRead;
+	protected WordQueue wordQueue;
 	private Hashtable<String, Integer> hash;
 	private int brockerIndex;
 	private int brockerSize;
 	
 	public Producer(Brocker brocker){
 		this.brocker = brocker;
-		
+		this.wordQueue = new WordQueue();
 		this.hash = new Hashtable<>();
 	}
 
 	@Override
 	public void run() {
-		String word = fileRead.getStr();
+		readFile();
+		String word = wordQueue.pollFileWord();
 		
-		while(!word.isEmpty() || word.equals(""));{			
+		while(!word.isEmpty() || word.equals(""));{
 			putStrToQuque(word);
-			word = fileRead.getStr();		
+			word = wordQueue.pollFileWord();		
 		}
 	}
 	
 	private boolean disposeSameStr(String key) {
 		if(hash.containsKey(key)) {
 			int index = hash.get(key);
-			brocker.putStr(key, index);			
+			brocker.putWord(key, index);			
 			return true;
 		}		
 		
@@ -51,6 +53,8 @@ public class Producer implements Runnable {
 	private void putStrToQuque(String word) {
 		hash.put(word, brockerIndex++ % brockerSize);
 		int index = hash.get(word);
-		brocker.putStr(word, index);
+		brocker.putWord(word, index);
 	}
+	
+	protected abstract void readFile();
 }

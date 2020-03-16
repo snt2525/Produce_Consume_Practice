@@ -1,5 +1,8 @@
 package Consumer;
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.Logger;
+
+import Brocker.Brocker;
 
 /*
  *  a. 파티션에서 순차적으로 단어를 1개씩 가져온다.
@@ -8,26 +11,27 @@ import java.util.concurrent.BlockingQueue;
  */
 
 public class Consumer implements Runnable{
-	private BlockingQueue<String>[] queue;
+	private final static Logger LOG = Logger.getLogger("FileRead");	
+	private Brocker brocker;
+	//private BlockingQueue<String>[] queue;
 	private StringBuffer[] saveStr;
 	private int count;
 	
-	public Consumer(BlockingQueue<String>[] queue){
-		this.queue = queue;
+	public Consumer(Brocker brocker){
+		this.brocker = brocker;
 		this.saveStr = new StringBuffer[26];
 	}
 	
 	@Override
 	public void run() {
 		String str = getStr(getNextPartNum());
-		while(validateCheckQueue()){			
-			
+		while(validateCheckQueue()){				
 			if(!str.equals("")){
 				int index = discriminateStrFirstIndex(str);
 				SaveStr(index, str);
 			}
 			str = getStr(getNextPartNum());
-		}		
+		}
 	}
 	
 	private int getNextPartNum(){
@@ -37,20 +41,14 @@ public class Consumer implements Runnable{
 	}
 	
 	private String getStr(int partNum){
-		if(checkPartNull(partNum)){
+		String word = brocker.getWord(partNum);
+		if(word == null){
 			return "";
 		}
 		
-		return pollStr(partNum);
+		return word;
 	}
 	
-	private boolean checkPartNull(int partNum){
-		return queue[partNum].isEmpty();
-	}
-	
-    private String pollStr(int partNum){
-    	return queue[partNum].poll();
-    }
     
     private int discriminateStrFirstIndex(String str){
     	char find = str.charAt(0);
@@ -67,12 +65,12 @@ public class Consumer implements Runnable{
     }
     
     private boolean validateCheckQueue(){
-    	int qLength = queue.length;
-    	for(int i = 0;i < qLength;i++){
-    		if(!queue[i].isEmpty()){
-    			return true;
+    	int brockerSize = brocker.getQueueSize();
+    	for(int i = 0;i < brockerSize;i++){
+    		if(!brocker.isEmptyQueue(i)){
+    			return false;
     		}
     	}
-		return false;
+		return true;
     }
 }

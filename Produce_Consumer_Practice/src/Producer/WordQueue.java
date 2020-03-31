@@ -10,11 +10,11 @@ public class WordQueue {
 		this.wordQueue = new LinkedList<String>();
 	}
 	
-	public void addFileWord(String word){
+	public void addFileWord(String word) {
 		wordQueue.add(word);
 	}
 	
-	public String pollFileWord(){
+	public String pollFileWord() {
 		return wordQueue.poll();
 	}
 }

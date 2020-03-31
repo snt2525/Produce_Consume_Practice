@@ -5,12 +5,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import Brocker.Brocker;
+import Broker.Broker;
 
 public class ConsumerFileWrite extends Consumer{
 	private final static Logger LOG = Logger.getLogger("ConsumerFileWrite");	
 
-	public ConsumerFileWrite(Brocker brocker) {
+	public ConsumerFileWrite(Broker brocker) {
 		super(brocker);
 	}
 	

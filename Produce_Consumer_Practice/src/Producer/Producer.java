@@ -3,8 +3,7 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Pattern;
 
-import Brocker.Brocker;
-import FileUtil.FileRead;
+import Broker.Broker;
 
 /*
  *  a. 파일에서 각 라인을 읽어온다.
@@ -13,18 +12,18 @@ import FileUtil.FileRead;
 	c. 유효하지 않은 단어들은 처리를 생략한다.
 	d. 유효한 단어들은 N개의 파티션으로 나눠서 Consumer에 전달한다.
 	· 파티션 수는 프로그램의 실행 argument로 입력 받는다.
-	· 동일한 단어는 항상 동일한 파티션에 포함되야 한다.
+	· 동일한 단어 항상 동일한 파티션에 포함되야 한다.
  */
 
 public abstract class Producer implements Runnable {
-	private Brocker brocker;
+	private Broker broker;
 	protected WordQueue wordQueue;
 	private Hashtable<String, Integer> hash;
-	private int brockerIndex;
-	private int brockerSize;
+	private int brokerIndex;
+	private int brokerSize;
 	
-	public Producer(Brocker brocker){
-		this.brocker = brocker;
+	public Producer(Broker broker){
+		this.broker = broker;
 		this.wordQueue = new WordQueue();
 		this.hash = new Hashtable<>();
 	}
@@ -43,17 +42,16 @@ public abstract class Producer implements Runnable {
 	private boolean disposeSameStr(String key) {
 		if(hash.containsKey(key)) {
 			int index = hash.get(key);
-			brocker.putWord(key, index);			
+			broker.putWord(key, index);			
 			return true;
 		}		
-		
 		return false;
 	}
 	
 	private void putStrToQuque(String word) {
-		hash.put(word, brockerIndex++ % brockerSize);
+		hash.put(word, brokerIndex++ % brokerSize);
 		int index = hash.get(word);
-		brocker.putWord(word, index);
+		broker.putWord(word, index);
 	}
 	
 	protected abstract void readFile();

@@ -1,14 +1,14 @@
-package Brocker;
+package Broker;
 
 import java.util.Hashtable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Brocker {
+public class Broker {
 	private BlockingQueue<String>[] queue;
 	private int queueSize;
 	
-	public Brocker(int size) {
+	public Broker(int size) {
 		this.queueSize = size;
 		this.queue = new LinkedBlockingQueue[size];
 		for(int i = 0;i < size;i++)

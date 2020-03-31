@@ -1,27 +1,19 @@
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import Brocker.Brocker;
+import Broker.Broker;
 import Consumer.Consumer;
-import FileUtil.FileRead;
 import Producer.Producer;
 import Producer.ProducerFileRead;
 
 public class Application {
-	static FileRead fileIo;
-	static Brocker brokcer;
+	static Broker brokcer;
 	private Thread producerT;
 	private Thread consumer;
 
 	private void init() {	
-		initFileIo();		
 		this.producerT = new Thread(new ProducerFileRead(brokcer), "Producer");
 		this.consumer = new Thread();
-	}
-	
-	private void initFileIo(){
-		this.fileIo = new FileRead();
-		this.brokcer = new Brocker(fileIo.getWordSize());			
 	}
 	
 	private void closeResource(){

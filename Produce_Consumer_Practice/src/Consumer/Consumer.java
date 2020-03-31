@@ -2,7 +2,7 @@ package Consumer;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Logger;
 
-import Brocker.Brocker;
+import Broker.Broker;
 
 /*
  *  a. 파티션에서 순차적으로 단어를 1개씩 가져온다.
@@ -12,13 +12,13 @@ import Brocker.Brocker;
 
 public class Consumer implements Runnable{
 	private final static Logger LOG = Logger.getLogger("FileRead");	
-	private Brocker brocker;
+	private Broker broker;
 	//private BlockingQueue<String>[] queue;
 	private StringBuffer[] saveStr;
 	private int count;
 	
-	public Consumer(Brocker brocker){
-		this.brocker = brocker;
+	public Consumer(Broker broker){
+		this.broker = broker;
 		this.saveStr = new StringBuffer[26];
 	}
 	
@@ -41,7 +41,7 @@ public class Consumer implements Runnable{
 	}
 	
 	private String getStr(int partNum){
-		String word = brocker.getWord(partNum);
+		String word = broker.getWord(partNum);
 		if(word == null){
 			return "";
 		}
@@ -65,9 +65,9 @@ public class Consumer implements Runnable{
     }
     
     private boolean validateCheckQueue(){
-    	int brockerSize = brocker.getQueueSize();
+    	int brockerSize = broker.getQueueSize();
     	for(int i = 0;i < brockerSize;i++){
-    		if(!brocker.isEmptyQueue(i)){
+    		if(broker.isNotEmptyQueue(i)){
     			return false;
     		}
     	}

@@ -12,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import Brocker.Brocker;
+import Broker.Broker;
 
 public class ProducerFileRead extends Producer{	
 	private final static Logger LOG = Logger.getLogger("ProducerFileRead");	
@@ -20,11 +20,11 @@ public class ProducerFileRead extends Producer{
 	private final static String INVAILD_PATTERN ="^[a-zA-Z0-9]*$";
 
 
-	public ProducerFileRead(Brocker brocker) {
+	public ProducerFileRead(Broker brocker) {
 		super(brocker);
 	}
 
-	protected void readFile(){
+	protected void readFile() {
 		File file = new File("word.txt");
 		
 		try(BufferedReader bufReader = new BufferedReader(new FileReader(file));){
